@@ -9,8 +9,8 @@ public class Country {
     @SerializedName("name")
     public Name name;
 
-    @SerializedName("region")
-    public String continents;
+    @SerializedName("continents")
+    public List<String> continents;
 
     @SerializedName("flags")
     public Flags flags;

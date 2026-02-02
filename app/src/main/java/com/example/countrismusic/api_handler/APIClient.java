@@ -1,4 +1,4 @@
-package com.example.countrismusic;
+package com.example.countrismusic.api_handler;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIClient {
 
-    public static String BASE_URL = "https://restcountries.com/v3.1/name/";
+    public static String BASE_URL = "https://restcountries.com/v3.1/";
     private static Retrofit retrofit;
     public static Retrofit getClient() {
         if (retrofit == null) {

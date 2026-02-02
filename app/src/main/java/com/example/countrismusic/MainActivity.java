@@ -1,14 +1,14 @@
 package com.example.countrismusic;
 
 import android.os.Bundle;
+import android.util.Log;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.countrismusic.api_handler.APIClient;
+import com.example.countrismusic.api_handler.APIInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,56 +22,44 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private final ArrayList<Country> countries = new ArrayList<>();
-
-    private APIInterface api;
     private CardAdapter adapter;
-
-    private List<Country> countryList;
-
+    APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.countriesList);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://restcountries.com/v3.1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        api = retrofit.create(APIInterface.class);
-
-
-        fillCards();
 
         adapter = new CardAdapter(this, countries);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-
+        fillCards();
     }
 
     private void fillCards() {
 
-        Call<List<Country>> call = api.getAllCountries();
+        Call<List<Country>> call = apiInterface.getAllCountries("name,continents,flags");
 
         call.enqueue(new Callback<List<Country>>() {
             @Override
             public void onResponse(Call<List<Country>> call, Response<List<Country>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    countryList.addAll(response.body());
+                    countries.clear();
+                    countries.addAll(response.body());
                     adapter.notifyDataSetChanged();
+                } else {
+                     Log.e("API", "Error: " + response.code());
+
                 }
             }
 
             @Override
             public void onFailure(Call<List<Country>> call, Throwable t) {
                 t.printStackTrace();
-
             }
         });
     }
