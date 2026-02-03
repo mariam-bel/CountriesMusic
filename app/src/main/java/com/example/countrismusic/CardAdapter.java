@@ -36,7 +36,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyHolder> {
     @Override
     public void onBindViewHolder(@NonNull CardAdapter.MyHolder holder, int position) {
         Country country = countries.get(position);
-
         holder.countryName.setText(country.name.common);
         holder.countryContinent.setText(country.continents.get(0));
 
